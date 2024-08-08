@@ -1,0 +1,58 @@
+services:
+
+  bot_service:
+    build: bot_service/
+    image: bot_service_image
+    container_name: bot_service_container
+    env_file: .env
+    environment:
+      PROXY_HOST: nginx
+    depends_on:
+      - nginx
+
+  nginx:
+    image: nginx:1.27.0-alpine
+    container_name: nginx_container
+    env_file: .env
+    environment:
+      MESSAGE_SERVICE_HOST: message_service
+    ports:
+      - 8000:8000
+    depends_on:
+      - message_service
+    volumes:
+      - ./nginx/environ/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./nginx/logs/access/access.log:/nginx/logs/access.log
+      - ./nginx/logs/error/error.log:/nginx/logs/error.log
+
+  message_service:
+    build: message_service/
+    image: message_service_image
+    container_name: message_service_container
+    env_file: .env
+    environment:
+      MONGO_HOST: mongo
+    expose:
+      - 8000
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    container_name: mongo_container
+    env_file: .env
+    expose:
+      - 27017
+    volumes:
+      - mongo_data:/data/db
+
+
+volumes:
+
+  mongo_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./mongo/db_data
+

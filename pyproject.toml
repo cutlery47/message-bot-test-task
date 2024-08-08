@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "message-bot-test-task"
+version = "0.1.0"
+description = ""
+authors = ["Arkhip McNutt <ortiz47@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.112.0"
+pydantic = "^2.8.2"
+pymongo = "^4.8.0"
+pytz = "^2024.1"
+loguru = "^0.7.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
